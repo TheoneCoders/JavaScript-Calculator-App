@@ -46,6 +46,14 @@ var calculator = (function(){
             }
         } 
 
+        //handle decimal case
+        if(number == '.' && inputValue.length > 0) {
+            const decimalValidity = checkDecimalValidation();
+            if(!decimalValidity) {
+                return;
+            }
+        }
+
         inputValue += number;
         screenElement.innerText = inputValue;
     }
@@ -122,8 +130,13 @@ var calculator = (function(){
                 if (token in operators) {
                     operator = operators[token];
                 } else if (operator) {
-                    newCalData[newCalData.length - 1] = 
-                        operator(newCalData[newCalData.length - 1], token);
+
+                    const result =  operator(newCalData[newCalData.length - 1], token);
+                    const maxDecimal = countDecimals(newCalData[newCalData.length - 1]) > countDecimals(token) 
+                        ? countDecimals(newCalData[newCalData.length - 1])
+                        : countDecimals(token);
+
+                    newCalData[newCalData.length - 1] = parseFloat(result.toFixed(maxDecimal));
                     operator = null;
                 } else {
                     newCalData.push(token);
@@ -139,6 +152,29 @@ var calculator = (function(){
         }
     }
 
+    function countDecimals (value) {
+        if (Math.floor(value.valueOf()) === value.valueOf()) return 0;
+    
+        var str = value.toString();
+        if (str.indexOf(".") !== -1 && str.indexOf("-") !== -1) {
+            return str.split("-")[1] || 0;
+        } else if (str.indexOf(".") !== -1) {
+            return str.split(".")[1].length || 0;
+        }
+        return str.split("-")[1] || 0;
+    }
+
+    function checkDecimalValidation() {
+        let index = inputValue.length - 1;
+        while(index >= 0 && allowedOperation.indexOf(inputValue[index]) === -1) {
+            if(inputValue[index] === '.' ) {
+                return false;
+            }
+            index--;
+        }
+
+        return true;
+    }
     
     return {
         init: function() {
