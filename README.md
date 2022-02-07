@@ -2,8 +2,6 @@
 
 Basic Calculator Web app using Vanilla Javascript
 
-**STATUS: This project is actively used in production environments.**
-
 ![screen shot](https://github.com/TheoneCoders/JavaScript-Calculator-App/blob/main/screenshot.png)
 
 ## Features
