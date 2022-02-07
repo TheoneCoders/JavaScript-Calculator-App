@@ -37,7 +37,7 @@ var calculator = (function(){
 
         if(allowedOperation.indexOf(number) > -1) {
             let last =  inputValue.length > 0 ? inputValue.charAt(inputValue.length - 1) : '';
-            if(last == '' || (allowedOperation.indexOf(last) > -1 && last == number)) {
+            if((last == '' && !negativeValue) || (allowedOperation.indexOf(last) > -1 && last == number)) {
                 return;
             } else if(allowedOperation.indexOf(last) > -1 && !negativeValue) {
                 deleteLast();
@@ -95,14 +95,15 @@ var calculator = (function(){
             }
         }
 
-        //check for last number
-        if(allowedOperation.indexOf(number) > -1 || number === '.') {
-            return [];
-        }
-
         if (number !== '') {
             data.push(parseFloat(number));
-        } 
+        } else {
+            //check for last number
+            const lastNumber = inputValue[inputValue.length -1];
+            if(allowedOperation.indexOf(lastNumber) > -1 || lastNumber === '.') {
+                return [];
+            }
+        }
         return data;
     }
     
